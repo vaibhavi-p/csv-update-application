@@ -15,23 +15,24 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
 
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 /**
  * @author Vaibhavi.Patel
  *
  */
 public class CSVUpdateServiceTest {
-
+	
+	@Rule
+	public ExpectedException exceptionRule = ExpectedException.none();
+	
+	CSVUpdateService testObj = new CSVUpdateService();
+	
 	private static final String oldValue = "Londom";
     private static final String newValue = "London";
-	/**
-	 * Test method for
-	 * {@link com.nationalarchive.csvupdate.service.CSVUpdateService#updateRowValues(java.lang.String, java.lang.String, java.lang.String, java.lang.String)}.
-	 * 
-	 * @throws IOException
-	 * @throws FileNotFoundException
-	 */
+	
     @Test
 	public void shouldNotUpdateIfColumnNotFound() throws IOException {
 		
@@ -39,8 +40,7 @@ public class CSVUpdateServiceTest {
 		String absolutePath = file.getAbsolutePath();
 		List<String> linesBeforeUpdate = Files.readAllLines(Paths.get(absolutePath), StandardCharsets.UTF_8);
 
-		CSVUpdateService updateService = new CSVUpdateService();
-		updateService.updateRowValues(absolutePath, "origin1", oldValue, newValue);
+		testObj.updateRowValues(absolutePath, "origin1", oldValue, newValue);
 
 		//Column values should not change
 		List<String> linesAfterUpdate = Files.readAllLines(Paths.get(absolutePath), StandardCharsets.UTF_8);
@@ -54,8 +54,7 @@ public class CSVUpdateServiceTest {
 		String absolutePath = file.getAbsolutePath();
 		List<String> linesBeforeUpdate = Files.readAllLines(Paths.get(absolutePath), StandardCharsets.UTF_8);
 
-		CSVUpdateService updateService = new CSVUpdateService();
-		updateService.updateRowValues(absolutePath, "origin", oldValue, newValue);
+		testObj.updateRowValues(absolutePath, "origin", oldValue, newValue);
 
 		List<String> linesAfterUpdate = Files.readAllLines(Paths.get(absolutePath), StandardCharsets.UTF_8);
 		
@@ -68,8 +67,7 @@ public class CSVUpdateServiceTest {
 		String absolutePath = file.getAbsolutePath();
 		List<String> linesBeforeUpdate = Files.readAllLines(Paths.get(absolutePath), StandardCharsets.UTF_8);
 
-		CSVUpdateService updateService = new CSVUpdateService();
-		updateService.updateRowValues(absolutePath, "origin", oldValue, newValue);
+		testObj.updateRowValues(absolutePath, "origin", oldValue, newValue);
 
 		List<String> linesAfterUpdate = Files.readAllLines(Paths.get(absolutePath), StandardCharsets.UTF_8);
 		assertEquals(linesBeforeUpdate, linesAfterUpdate);
@@ -86,12 +84,17 @@ public class CSVUpdateServiceTest {
 		File file = new File("src/test/resources/file4.csv");
 		String absolutePath = file.getAbsolutePath();
 		
-		CSVUpdateService updateService = new CSVUpdateService();
-		updateService.updateRowValues(absolutePath, "origin", oldValue, newValue);
+		testObj.updateRowValues(absolutePath, "origin", oldValue, newValue);
 		
 		List<String> linesAfterUpdate = Files.readAllLines(Paths.get(absolutePath), StandardCharsets.UTF_8);
 		List<String> expectedLinesAfterUpdate = Files.readAllLines(outputFilePath, StandardCharsets.UTF_8);
 		
 		assertEquals(linesAfterUpdate, expectedLinesAfterUpdate);
+	}
+	
+	@Test
+	public void shouldThrowExceptionIfFileDoesntExist() throws IOException {
+		exceptionRule.expect(FileNotFoundException.class);
+		testObj.updateRowValues("test.csv", "Test", oldValue, newValue);
 	}
 }
