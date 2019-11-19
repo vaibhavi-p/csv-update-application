@@ -25,7 +25,7 @@ The above command will read the file present at `<file_path>` loaction and updat
 
 To install the app, run through the following steps:
 
-1. Clone the repo and change the directory to be the cloned directory (i.e. app-bank)
+1. Clone the repo and change the directory to be the cloned directory (i.e. csv-update-application)
 2. Make sure the machine has [Java](http://www.oracle.com/technetwork/java/javase/downloads/index-jsp-138363.html) and [Maven](https://maven.apache.org/download.cgi) installed.
 3. From the command line, type `mvn clean install`, this will start the installation process
 4. Once installation is complete, the `jar` file will be present inside `target` folder. This file is an executable file and can be run via `java -jar target/csv-update-application.jar` command with a list of arguments
